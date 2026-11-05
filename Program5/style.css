@@ -1,0 +1,13 @@
+body{
+	background-color: black;
+	 text-align:center;
+	 color:white;
+	 font-family: sans-serif;
+}
+#heading{
+	margin: 30px;
+	color: white;
+	background-color:dodgerblue;
+	padding: 10px;
+	border-radius:10px;
+}

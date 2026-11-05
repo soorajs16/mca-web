@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar Generator</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        table {
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid black;
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: blue;
+            color: white;
+        }
+
+        td {
+            cursor: pointer;
+        }
+
+        td.sunday,
+        td.second-saturday {
+            color: red;
+        }
+
+        td.second-saturday {
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>Calendar Generator</h2>
+
+    <label for="year">Enter Year:</label>
+    <input type="number" id="year"
+           placeholder="Enter year" min="1900" max="2100">
+
+    <label for="month">Enter Month:</label>
+    <input type="number" id="month"
+           placeholder="Enter month" min="1" max="12">
+
+    <button onclick="generateCalendar()">Generate Calendar</button>
+
+    <div id="calendar-container"></div>
+
+    <script>
+        function generateCalendar() {
+
+            const year = Number(document.getElementById('year').value);
+            const month = Number(document.getElementById('month').value);
+
+            const calendarContainer =
+                document.getElementById('calendar-container');
+
+            // Validate year and month
+            if (
+                !year ||
+                !month ||
+                year < 1900 ||
+                year > 2100 ||
+                month < 1 ||
+                month > 12
+            ) {
+                alert('Please enter a valid year and month.');
+                return;
+            }
+
+            // Get the number of days and the first day of the month
+            const daysInMonth = new Date(year, month, 0).getDate();
+
+            const firstDay = new Date(year, month - 1, 1).getDay();
+
+            let calendarHTML = '<table>';
+
+            calendarHTML += `
+                <tr>
+                    <th>SUN</th>
+                    <th>MON</th>
+                    <th>TUE</th>
+                    <th>WED</th>
+                    <th>THU</th>
+                    <th>FRI</th>
+                    <th>SAT</th>
+                </tr>
+            `;
+
+            let dayCounter = 1;
+
+            for (let i = 0; i < 6; i++) {
+
+                calendarHTML += '<tr>';
+
+                for (let j = 0; j < 7; j++) {
+
+                    if (
+                        (i === 0 && j < firstDay) ||
+                        dayCounter > daysInMonth
+                    ) {
+                        calendarHTML += '<td></td>';
+
+                    } else {
+
+                        const currentDate =
+                            new Date(year, month - 1, dayCounter);
+
+                        const isSunday =
+                            currentDate.getDay() === 0;
+
+                        const isSecondSaturday =
+                            currentDate.getDay() === 6 &&
+                            Math.ceil(dayCounter / 7) === 2;
+
+                        let className = '';
+
+                        if (isSunday) {
+                            className = 'sunday';
+
+                        } else if (isSecondSaturday) {
+                            className = 'second-saturday';
+                        }
+
+                        calendarHTML += `
+                            <td class="${className}"
+                                onclick="alert('You clicked on ${currentDate.toDateString()}')">
+                                ${dayCounter}
+                            </td>
+                        `;
+
+                        dayCounter++;
+                    }
+                }
+
+                calendarHTML += '</tr>';
+
+                if (dayCounter > daysInMonth) {
+                    break;
+                }
+            }
+
+            calendarHTML += '</table>';
+
+            calendarContainer.innerHTML = calendarHTML;
+        }
+    </script>
+
+</body>
+</html>
+
